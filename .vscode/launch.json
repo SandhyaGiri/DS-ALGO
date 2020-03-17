@@ -1,0 +1,183 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - GroupAnagrams",
+            "request": "launch",
+            "mainClass": "datastructures.strings.GroupAnagrams",
+            "projectName": "Programs_40743c2e"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - LongestChainOfPairs",
+            "request": "launch",
+            "mainClass": "algorithms.dp.LongestChainOfPairs",
+            "projectName": "Programs_40743c2e"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - A",
+            "request": "launch",
+            "mainClass": "javaproblems.A",
+            "projectName": "Programs_40743c2e"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - WirecardScreening",
+            "request": "launch",
+            "mainClass": "javaproblems.WirecardScreening",
+            "projectName": "Programs_40743c2e"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - WirecardScreening",
+            "request": "launch",
+            "mainClass": "java.WirecardScreening",
+            "projectName": "Programs_40743c2e"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - GameOfLife",
+            "request": "launch",
+            "mainClass": "GameOfLife"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - BinaryTree",
+            "request": "launch",
+            "mainClass": "BinaryTree"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MergeBST",
+            "request": "launch",
+            "mainClass": "MergeBST"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - BinaryTreeBST",
+            "request": "launch",
+            "mainClass": "BinaryTreeBST"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MaxSquareSubMatrix",
+            "request": "launch",
+            "mainClass": "MaxSquareSubMatrix"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - BinarySearchTree",
+            "request": "launch",
+            "mainClass": "BinarySearchTree"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MaxCircularSubarraySum",
+            "request": "launch",
+            "mainClass": "MaxCircularSubarraySum"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MedianSortedArrays",
+            "request": "launch",
+            "mainClass": "MedianSortedArrays"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Trie",
+            "request": "launch",
+            "mainClass": "Trie"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MinDifferenceArray",
+            "request": "launch",
+            "mainClass": "MinDifferenceArray"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - RunningMedian",
+            "request": "launch",
+            "mainClass": "RunningMedian"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - LongestChainOfPairs",
+            "request": "launch",
+            "mainClass": "LongestChainOfPairs"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - LIS",
+            "request": "launch",
+            "mainClass": "LIS"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - InversionCount",
+            "request": "launch",
+            "mainClass": "InversionCount"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TournamentMethod",
+            "request": "launch",
+            "mainClass": "TournamentMethod"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - DualPivotQuickSort",
+            "request": "launch",
+            "mainClass": "DualPivotQuickSort"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - DutchNationalFlag",
+            "request": "launch",
+            "mainClass": "DutchNationalFlag"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - QuickSort",
+            "request": "launch",
+            "mainClass": "QuickSort"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - InsertionSort",
+            "request": "launch",
+            "mainClass": "InsertionSort"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - BubbleSort",
+            "request": "launch",
+            "mainClass": "BubbleSort"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TernarySearch",
+            "request": "launch",
+            "mainClass": "TernarySearch"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - ExponentialSearch",
+            "request": "launch",
+            "mainClass": "ExponentialSearch"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - JumpSearch",
+            "request": "launch",
+            "mainClass": "JumpSearch"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - InterpolationSearch",
+            "request": "launch",
+            "mainClass": "InterpolationSearch"
+        }
+    ]
+}
