@@ -100,6 +100,8 @@ public class BinarySearch {
 
         Idea: at any time one half of the array is sorted (correctly), in this we can do normal bsearch if number lies in this range. ow search 
         in next half.
+
+        Problem 2: Search in rotated sorted array with duplicates is not possible with bsearch, we have to use linear search!
      * @param nums
      * @param target
      * @return

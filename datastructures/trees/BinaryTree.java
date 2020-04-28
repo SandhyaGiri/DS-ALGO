@@ -441,6 +441,61 @@ return its bottom-up level order traversal as:
         }
         return 0;
     }
+
+    /**
+     * https://leetcode.com/problems/distribute-coins-in-binary-tree/
+     * 
+     * Given the root of a binary tree with N nodes, each node in the tree has node.val coins, and there are N coins total.
+
+        In one move, we may choose two adjacent nodes and move one coin from one node to another.  (The move may be from parent to child, or from child to parent.)
+
+        Return the number of moves required to make every node have exactly one coin.
+     */
+    int moves =0;
+    int dfsUtil(TreeNode root){
+        if(root==null){
+            return 0;// no excess coins to spare, as no coins present
+        }
+        int lexcess = dfsUtil(root.left);
+        int rexcess = dfsUtil(root.right);
+        moves+= Math.abs(lexcess)+ Math.abs(rexcess);
+        return root.val + lexcess+ rexcess -1;
+    }
+    public int distributeCoins(TreeNode root) {
+        moves =0;
+        dfsUtil(root);
+        return moves;
+    }
+    
+    /**
+     * https://leetcode.com/problems/longest-univalue-path/
+     * 
+     * Given a binary tree, find the length of the longest path where each node in the path has the same value. This path may or may not pass through the root.
+
+        The length of path between two nodes is represented by the number of edges between them.
+     */
+    int maxPathLen = Integer.MIN_VALUE;
+    int longestUnivaluePathUtil(TreeNode root){
+        if(root == null || (root.left == null && root.right == null)) {
+            // leaf node
+            return 0;
+        }
+        int lenLeft = longestUnivaluePathUtil(root.left);
+        int lenRight = longestUnivaluePathUtil(root.right);
+        int maxLenLeft = 0, maxLenRight = 0;
+        if(root.left != null && root.val == root.left.val){
+            maxLenLeft += lenLeft +1;
+        }
+        if(root.right != null && root.val == root.right.val) {
+            maxLenRight += lenRight +1;
+        }
+        maxPathLen = Math.max(maxPathLen, maxLenLeft+maxLenRight); // path going through this node (root)
+        return Math.max(maxLenLeft, maxLenRight); // further you can only extend one of the paths left or right not both
+    }
+    public int longestUnivaluePath(TreeNode root) {
+        longestUnivaluePathUtil(root);
+        return maxPathLen == Integer.MIN_VALUE ? 0 : maxPathLen;
+    }
     public static void main(String args[]) {
         BinaryTree tree = new BinaryTree();
         tree.insert(10);
