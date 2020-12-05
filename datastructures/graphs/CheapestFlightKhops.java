@@ -33,6 +33,13 @@ public class CheapestFlightKhops {
     * @param K
     * @return
     */
+    // Having VISITED array will remove some valid nodes which might lead to the goal
+    // this will fail for some testcases where initial high cost leads to goal with less hops
+    // Ex: 5
+    // [[0,1,1],[0,2,5],[1,2,1],[2,3,1],[3,4,1]]
+    //  0
+    // 4
+    // 2
     public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
         if(flights.length > 0) {
             // get adj list representation
@@ -75,6 +82,54 @@ public class CheapestFlightKhops {
                             }
                         }
                     }   
+                }
+            }
+            return minCost == Integer.MAX_VALUE ? -1 : minCost;
+        }
+        return -1;
+    }
+
+    // successful for previously mentioned failure test case, where optimal path has higher cost
+    // than most optimal path but still has less hops than it.
+    public int findCheapestPrice2(int n, int[][] flights, int src, int dst, int K) {
+        if(flights.length > 0) {
+            // get adj list representation
+            Map<Integer, List<DestNode>> adjMap = new HashMap<Integer, List<DestNode>>();
+            for(int i=0;i<flights.length;i++) {
+                int source = flights[i][0];
+                int dest = flights[i][1];
+                int cost = flights[i][2];
+                if(adjMap.get(source) == null) {
+                    List<DestNode> neighbors = new ArrayList<DestNode>();
+                    neighbors.add(new DestNode(dest, cost));
+                    adjMap.put(source, neighbors);
+                } else {
+                    adjMap.get(source).add(new DestNode(dest, cost));
+                }
+            }
+            // do normal BFS for k+1 times/levels, maintain min cost so far
+            PriorityQueue<DestNode> queue = new PriorityQueue<DestNode>();
+            queue.add(new DestNode(src, 0, 0));
+            int minCost = Integer.MAX_VALUE;
+            while(!queue.isEmpty()) {
+                DestNode node = queue.poll();
+                if(node.v == dst) {
+                    // System.out.println(node.v + " " + node.cost + " "+ node.hops);
+                    minCost = node.cost;
+                    break;
+                }
+                //System.out.println(node.v + "," + node.cost + ","+ node.hValue);
+                // expand and add nodes to queue, with additional cost added
+                
+                // ONLY IF you can do an additional hop!! (this REPLACES the visited check)
+                // so you have all copies of the same node with different cost in queue
+                // and you search thru them one by one until you see the destination!!
+                if(node.hops <=K && adjMap.get(node.v) != null) {
+                    //System.out.println("neighbors");
+                    for(DestNode neigh: adjMap.get(node.v)){
+                        queue.add(new DestNode(neigh.v, neigh.cost + node.cost, node.hops + 1));
+                            //System.out.println(neigh.v + " " + (neigh.cost + node.cost));
+                    }
                 }
             }
             return minCost == Integer.MAX_VALUE ? -1 : minCost;

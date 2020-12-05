@@ -140,19 +140,19 @@ public class BinaryTree {
      * 
      * Given a binary tree, return the bottom-up level order traversal of its nodes' values. (ie, from left to right, level by level from leaf to root).
 
-For example:
-Given binary tree [3,9,20,null,null,15,7],
-    3
-   / \
-  9  20
-    /  \
-   15   7
-return its bottom-up level order traversal as:
-[
-  [15,7],
-  [9,20],
-  [3]
-]
+        For example:
+        Given binary tree [3,9,20,null,null,15,7],
+            3
+        / \
+        9  20
+            /  \
+        15   7
+        return its bottom-up level order traversal as:
+        [
+        [15,7],
+        [9,20],
+        [3]
+        ]
      * @param root
      * @return
      */
@@ -210,7 +210,7 @@ return its bottom-up level order traversal as:
                         q.addLast(node.right);
                     }
                 } else {
-                   TreeNode node = q.removeLast();
+                    TreeNode node = q.removeLast();
                     nodes.add(node.val);
                     if(node.right != null) {
                         q.addFirst(node.right);
@@ -459,42 +459,179 @@ return its bottom-up level order traversal as:
         int lexcess = dfsUtil(root.left);
         int rexcess = dfsUtil(root.right);
         moves+= Math.abs(lexcess)+ Math.abs(rexcess);
-        return root.val + lexcess+ rexcess -1;
+        return root.val + lexcess+ rexcess -1; // this node needs a 1 hence subtract 1
     }
     public int distributeCoins(TreeNode root) {
         moves =0;
         dfsUtil(root);
         return moves;
     }
-    
-    /**
-     * https://leetcode.com/problems/longest-univalue-path/
-     * 
-     * Given a binary tree, find the length of the longest path where each node in the path has the same value. This path may or may not pass through the root.
 
-        The length of path between two nodes is represented by the number of edges between them.
+    /**
+     * Check If a String Is a Valid Sequence from Root to Leaves Path in a Binary Tree
+     * Input: root = [0,1,0,0,1,0,null,null,1,0,0], arr = [0,1,0,1]
+        Output: true
+        Explanation: 
+        The path 0 -> 1 -> 0 -> 1 is a valid sequence (green color in the figure). 
+        Other valid sequences are: 
+        0 -> 1 -> 1 -> 0 
+        0 -> 0 -> 0
+
+        Input: root = [0,1,0,0,1,0,null,null,1,0,0], arr = [0,0,1]
+        Output: false 
+        Explanation: The path 0 -> 0 -> 1 does not exist, therefore it is not even a sequence.
+     * @param root
+     * @param arr
+     * @param index
+     * @return
      */
-    int maxPathLen = Integer.MIN_VALUE;
-    int longestUnivaluePathUtil(TreeNode root){
-        if(root == null || (root.left == null && root.right == null)) {
-            // leaf node
+    boolean dfsUtil(TreeNode root, int[] arr, int index){
+        if(index == arr.length-1){
+            return (root != null && root.val == arr[index] && root.left == null && root.right == null);
+        }
+        if(root == null || root.val != arr[index]){
+            return false;
+        }
+        return dfsUtil(root.left, arr, index+1) || dfsUtil(root.right, arr, index+1);
+    }
+    public boolean isValidSequence(TreeNode root, int[] arr) {
+        return dfsUtil(root, arr, 0);
+    }
+
+    // Invert a binary tree (reverse left and right children bottom up)
+    public TreeNode invertTree(TreeNode root) {
+        if(root == null){
+            return null;
+        }
+        invertTree(root.left);
+        invertTree(root.right);
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+        return root;
+    }
+
+    // https://leetcode.com/problems/sum-of-left-leaves/
+    /**
+     * Find the sum of all left leaves in a given binary tree.
+
+Example:
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+There are two left leaves in the binary tree, with values 9 and 15 respectively. Return 24.
+     * @param root
+     * @return
+     */
+    public int sumOfLeftLeaves(TreeNode root) {
+        if(root == null){
             return 0;
         }
-        int lenLeft = longestUnivaluePathUtil(root.left);
-        int lenRight = longestUnivaluePathUtil(root.right);
-        int maxLenLeft = 0, maxLenRight = 0;
-        if(root.left != null && root.val == root.left.val){
-            maxLenLeft += lenLeft +1;
+        // left leaf node
+        int lSum = 0;
+        if(root.left != null && root.left.left == null && root.left.right == null){
+            lSum = root.left.val;
+        } else {
+            lSum = sumOfLeftLeaves(root.left);
         }
-        if(root.right != null && root.val == root.right.val) {
-            maxLenRight += lenRight +1;
-        }
-        maxPathLen = Math.max(maxPathLen, maxLenLeft+maxLenRight); // path going through this node (root)
-        return Math.max(maxLenLeft, maxLenRight); // further you can only extend one of the paths left or right not both
+        int rSum = sumOfLeftLeaves(root.right);
+        return lSum + rSum;
     }
-    public int longestUnivaluePath(TreeNode root) {
-        longestUnivaluePathUtil(root);
-        return maxPathLen == Integer.MIN_VALUE ? 0 : maxPathLen;
+
+    int getLeafSumAtDepth(TreeNode root, int level, int currLevel){
+        if(root == null){
+            return 0;
+        }
+        if(root.left == null && root.right == null){ // leaf
+            return currLevel == level ? root.val : 0;
+        }
+        return getLeafSumAtDepth(root.left, level, currLevel+1) + getLeafSumAtDepth(root.right, level, currLevel+1);
+    }
+
+    // https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
+    /**
+     * Given a binary tree, flatten it to a linked list in-place.
+
+For example, given the following tree:
+
+    1
+   / \
+  2   5
+ / \   \
+3   4   6
+The flattened tree should look like:
+
+1
+ \
+  2
+   \
+    3
+     \
+      4
+       \
+        5
+         \
+          6
+
+          Idea: In the final tree, there is no left pointer. Make a flattened left subtree as right subtree for current
+          node. Then attach the flattened right subtree to end of this newly atatched left subtree (only traverse right
+          pointers). If no left subtree exists, the flattend right subtree becomes the new right child for current node.
+          Also elimate the already existing left node pointer.
+     * @param root
+     * @return
+     */
+    TreeNode getFlatTree(TreeNode root){
+        if(root == null){
+            return null;
+        }
+        TreeNode flatLeft = getFlatTree(root.left);
+        TreeNode flatRight = getFlatTree(root.right);
+        // get last node in flatLeft
+        TreeNode prev = null, curr=flatLeft;
+        while(curr != null){
+            prev = curr;
+            curr = curr.right; // only right pointers in the flat subtree
+        }
+        if(prev != null){
+            prev.right = flatRight;
+        }
+        // if left tree didn't exist, flattened right tree is our next right.
+        root.right = flatLeft == null ? flatRight : flatLeft;
+        root.left = null; // cut the already existing left subtree
+        return root;
+    }
+    public void flatten(TreeNode root) {
+        getFlatTree(root);
+    }
+
+    // https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+    int rootIndex = 0;
+    TreeNode buildTreeUtil(int[] preorder, int[] inorder, int l, int r){
+        if(l > r || rootIndex > preorder.length-1){
+            return null;
+        }
+        TreeNode root = new TreeNode(preorder[rootIndex]);
+        rootIndex+=1;
+        if(l==r){
+            return root;
+        }
+        // find root index in inorder array (can use bsearch only for BST as inorder is sorted)
+        int index=l;
+        for(;index<=r;index++){
+            if(inorder[index] == root.val){
+                break;
+            }
+        }
+        root.left = buildTreeUtil(preorder, inorder, l, index-1);
+        root.right = buildTreeUtil(preorder, inorder, index+1, r);
+        return root;
+    }
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return buildTreeUtil(preorder, inorder, 0, inorder.length-1);
     }
     public static void main(String args[]) {
         BinaryTree tree = new BinaryTree();

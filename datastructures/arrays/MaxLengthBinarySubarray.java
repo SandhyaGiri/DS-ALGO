@@ -32,6 +32,7 @@ public class MaxLengthBinarySubarray {
         int maxSubarrLen = maxIndexSoFar+1;
         // for subarrays that don't start at 0
         
+        // store a map of index at which the sum occured, in order to calculate the length of the subarray.
         HashMap<Integer,Integer> sums = new HashMap<>();
         for(int i=0;i<nums.length;i++) {
             if(sums.get(arrSum[i]) == null){

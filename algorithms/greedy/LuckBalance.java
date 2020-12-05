@@ -3,6 +3,7 @@ package algorithms.greedy;
 import java.io.*;
 import java.util.*;
 
+// 2d array sorting
 class ContestComparator implements Comparator<int[]> {
     public int compare(int[] contest1, int[] contest2) {
         if(contest1[1] != contest2[1]) {

@@ -40,6 +40,19 @@ public class BinarySearchTree {
         }
     }
 
+    public TreeNode insertRecursive(TreeNode root, int val) {
+        if(root != null){
+            if(val < root.element){
+                root.left = insertRecursive(root.left, val);
+            }
+            else if(val > root.element){
+                root.right = insertRecursive(root.right, val);
+            }
+        }
+        // first time null is encountered is the place of insertion.
+        return root == null? new TreeNode(val) : root;
+    }
+
     public boolean search(int element) {
         TreeNode curr = root;
         while(curr != null) {
@@ -54,6 +67,40 @@ public class BinarySearchTree {
         }
         return false;
     }
+
+    int getMinValue(TreeNode root){
+        int min = -1;
+        while(root != null){
+            min = root.element;
+            root = root.left;
+        }
+        return min;
+    }
+    // https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if(root == null){
+            return root;
+        }
+        if(key < root.element){
+            root.left = deleteNode(root.left, key); // modified left subtree
+        } else if(key > root.element){
+            root.right = deleteNode(root.right, key); // modified right subtree
+        } else{
+            // node found - 3 cases
+            if(root.left == null){ // no left subtree
+                return root.right;
+            } else if(root.right == null){ // no right subtree
+                return root.left;
+            } else {
+                // replace with inorder successor
+                root.element = getMinValue(root.right);
+                // recursively delete this successor value in right subtree
+                root.right = deleteNode(root.right, root.element);
+            }
+        }
+        return root;
+    }
+
     public void getInorder(TreeNode node, List<Integer> nodes) {
         if(node == null) {
             return;
@@ -134,6 +181,8 @@ public class BinarySearchTree {
 
     /**
      * Lowest common Ancestor for two nodes in a BST. Iterative solution.
+     * 
+     * BST - not height balanced, so Time: O(h)
      * @param root
      * @param p
      * @param q
@@ -205,6 +254,87 @@ public class BinarySearchTree {
         return root;
     }
 
+    // https://leetcode.com/problems/trim-a-binary-search-tree/
+    /**
+     * Given the root of a binary search tree and the lowest and highest boundaries as low and high,
+     * trim the tree so that all its elements lies in [low, high]. Trimming the tree should not change
+     * the relative structure of the elements that will remain in the tree (i.e., any node's descendant should remain a descendant).
+     * It can be proven that there is a unique answer.
+     * 
+     * Return the root of the trimmed binary search tree. Note that the root may change depending on the given bounds.
+     * 
+     * Idea: Do a postorder traversal. Assume you have trimmed left and right subtrees. At the root check if its value
+     * is in the range. If so attach trimmed subtrees as left and right and return this node. If not, then we need to
+     * replace it with left subtree if it exists (and attach right subtree to in order predecessor in left subtree) or
+     * just return right subtree.
+     * @param root
+     * @param L
+     * @param R
+     * @return
+     */
+    public TreeNode trimBST(TreeNode root, int L, int R) {
+        if(root == null){
+            return null;
+        }
+        TreeNode trimmedLeft = trimBST(root.left, L, R);
+        TreeNode trimmedRight = trimBST(root.right, L, R);
+        if(root.element >= L && root.element <= R){ // include root
+            root.left = trimmedLeft;
+            root.right = trimmedRight;
+            return root;
+        } else { // replace with left or right
+            if(trimmedLeft != null){
+                // attach trimmedRight to rightmost node in leftsubtree
+                TreeNode curr = trimmedLeft;
+                while(curr.right != null){
+                    curr = curr.right;
+                }
+                curr.right = trimmedRight;
+                return trimmedLeft;
+            } else { // only right subtree wins
+                return trimmedRight;
+            }
+        }
+    }
+    // https://leetcode.com/problems/increasing-order-search-tree/
+    /**
+     * Given the root of a binary search tree, rearrange the tree in in-order so that the leftmost node
+     * in the tree is now the root of the tree, and every node has no left child and only one right child.
+
+    Example 1:
+
+
+    Input: root = [5,3,6,2,4,null,8,1,null,null,null,7,9]
+    Output: [1,null,2,null,3,null,4,null,5,null,6,null,7,null,8,null,9]
+    Example 2:
+
+
+    Input: root = [5,1,7]
+    Output: [1,null,5,null,7]
+
+    IDea: convert left half to a list and return its head node, attach root to rightmost node and then link right subtrees
+    flatenned version to root's right. Always return the head node. (flatten a BST into an inorder list)
+     * @param root
+     * @return
+     */
+    public TreeNode increasingBST(TreeNode root) {
+        if(root == null){
+            return null;
+        }
+        TreeNode prev = increasingBST(root.left);
+        if(prev != null){
+            TreeNode temp = prev;
+            while(temp.right != null){
+                temp = temp.right;
+            }
+            temp.left = null;
+            temp.right = root;
+        }
+        root.left = null;
+        root.right = increasingBST(root.right);
+        // return the leftmost node (head node of the list)
+        return prev != null ? prev : root;
+    }
     public static void main(String[] args) {
         BinarySearchTree tree = new BinarySearchTree();
         tree.insert(3);

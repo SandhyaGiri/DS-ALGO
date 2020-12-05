@@ -1,5 +1,7 @@
 package algorithms.dp;
 
+import java.util.*;
+
 class Solution {
 
     /**
@@ -81,5 +83,83 @@ class Solution {
             }
         }
         return maxprofit + maxlocalprofit;
+    }
+
+    // https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/
+
+    // IDEA: extend previous one for 2 transactions
+    // didn't work for 19 cases, as we do only local profits, there could be a bigger
+    // profit sale later on even if price tipped now
+    // Ex:[1,2,4,2,5,7,2,4,9,0] Expected: 13, answered: 12 
+    public int maxProfit3Old(int[] prices) {
+        int maxlocalprofit = 0;
+        List<Integer> localProfits = new ArrayList<>();
+        if(prices.length > 0) {
+            int candidateBuy = prices[0];
+            for(int i=1;i<prices.length;i++) {
+                if(prices[i] > candidateBuy && prices[i]-candidateBuy > maxlocalprofit){
+                    maxlocalprofit = prices[i]-candidateBuy;
+                } else {
+                    candidateBuy = prices[i];
+                    System.out.println("Buying: "+ candidateBuy + ", old profit: " + maxlocalprofit);
+                    localProfits.add(maxlocalprofit);
+                    maxlocalprofit=0;
+                }
+            }
+        }
+        localProfits.add(maxlocalprofit);
+        System.out.println("size:" + localProfits.size() + ", last profit: " + maxlocalprofit);
+       
+        // sort descending and pick top 2 profits (if any)
+        Collections.sort(localProfits, Comparator.reverseOrder());
+        // sum top 2 values
+        int maxprofit=0;
+        int x=0;
+        while(x<2 && x< localProfits.size()){
+            int profit = localProfits.get(x);
+            System.out.println(profit);
+            if(x>=2){
+                break;
+            }
+            maxprofit += profit;
+            x++;
+        }
+        return maxprofit;
+    }
+    /**
+     * the idea behind using a state machine.
+
+        To find the profit each transaction has 2 states
+
+        State 1 -> Buying
+        State 2 -> Selling
+
+        When we buying, we use the profit. So profit = profit - stock price
+        When we selling, we add the earning into profit. So profit = profit + stock price
+
+        Using the above idea we create a state machine to find profit from at most 2 transactions (4 states).
+
+        State machine will look like:
+
+        transaction1 :- buy1 = max(buy1, 0 - stock) // for the 1st buy profit is 0
+                        sell1 = max(sell1, buy1 + stock)
+        For 2nd trasaction we use the profit accumulated from 1st transaction
+
+        transaction2 :- buy2 = max(buy2, sell1 - stock)
+                        sell2 = max(sell2, buy2 + stock)
+                
+     * @param prices
+     * @return
+     */
+    public int maxProfit3(int[] prices) {
+        if(prices == null || prices.length < 1) return 0;
+        int buy1 = -prices[0], sell1 = 0, buy2 = -prices[0], sell2 = 0;
+        for(int i = 1; i < prices.length; i++) {
+            buy1 = Math.max(buy1, -prices[i]);
+            sell1 = Math.max(sell1, buy1 + prices[i]);
+            buy2 = Math.max(buy2, sell1 - prices[i]);
+            sell2 = Math.max(sell2, buy2 + prices[i]);
+        }
+        return sell2;
     }
 }

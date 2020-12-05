@@ -1,4 +1,5 @@
 package algorithms.backtracking;
+
 /**
  * https://leetcode.com/problems/jump-game/
  * 
@@ -26,7 +27,7 @@ public class JumpGame {
         if(index == nums.length-1){
             return true; // goal node reached!
         }
-        if(index > nums.length-1 || nums[index] == 0){
+        if(index >= nums.length || nums[index] == 0){
             return false;
         }
         if(!visited[index]){
@@ -45,5 +46,41 @@ public class JumpGame {
     public boolean canJump(int[] nums) {
         visited = new boolean[nums.length];
         return dfsUtil(nums, 0);
+    }
+    
+    boolean dfs(int[] arr, boolean[] visited, int start){
+        if(start < 0 || start >= arr.length || visited[start]){
+            return false;
+        }
+        visited[start] = true;
+        if(arr[start] == 0) {
+            return true;
+        }
+        return dfs(arr, visited, start+arr[start]) || dfs(arr, visited, start-arr[start]);
+    }
+    /**
+     * https://leetcode.com/problems/jump-game-iii/
+     * 
+     * Given an array of non-negative integers arr, you are initially positioned at start index of the array. When you are at index i, you can jump to i + arr[i] or i - arr[i], check if you can reach to any index with value 0.
+
+        Notice that you can not jump outside of the array at any time.
+
+        
+
+        Example 1:
+
+        Input: arr = [4,2,3,0,3,1,2], start = 5
+        Output: true
+        Explanation: 
+        All possible ways to reach at index 3 with value 0 are: 
+        index 5 -> index 4 -> index 1 -> index 3 
+        index 5 -> index 6 -> index 4 -> index 1 -> index 3 
+     * @param arr
+     * @param start
+     * @return
+     */
+    public boolean canReach(int[] arr, int start) {
+        boolean[] visited = new boolean[arr.length];
+        return dfs(arr, visited, start);
     }
 }

@@ -46,4 +46,48 @@ public class Subsets {
     public List<List<Integer>> subsets(int[] nums) {
         return subsetUtil(nums, nums.length-1);
     }
+
+    // https://leetcode.com/problems/subsets-ii/
+    void subsetUtil(int[] nums, int i, List<Integer> currSet, List<List<Integer>> result){
+        if(i>=nums.length){
+            if(!result.contains(currSet)){
+                result.add(new ArrayList<>(currSet));   
+            }
+            return;
+        }
+        subsetUtil(nums, i+1, currSet, result); // not including nums[i]
+        currSet.add(nums[i]);
+        subsetUtil(nums, i+1, currSet, result); // including nums[i]
+        // backtracking
+        currSet.remove(Integer.valueOf(nums[i]));
+    }
+    /**
+     * Given a collection of integers that might contain duplicates, nums, return all possible subsets (the power set).
+
+        Note: The solution set must not contain duplicate subsets.
+
+        Example:
+
+        Input: [1,2,2]
+        Output:
+        [
+        [2],
+        [1],
+        [1,2,2],
+        [2,2],
+        [1,2],
+        []
+        ]
+
+        Idea: maintain the curr path (or set), while backtracking remove this element. On reaching end of
+        the array, add the curr set to a list only if it is not already existing.
+     * @param nums
+     * @return
+     */
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        subsetUtil(nums, 0, new ArrayList<>(), result);
+        return result;
+    }
 }

@@ -50,6 +50,26 @@ public class NaryTree {
     }
 
     /**
+     * Maximum Depth of N-ary Tree
+     * 
+     * Given a n-ary tree, find its maximum depth.
+    The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+    Nary-Tree input serialization is represented in their level order traversal, each group of children is separated by the null value (See examples).
+     * @param root
+     * @return
+     */
+    public int maxDepth(Node root) {
+        if(root == null){
+            return 0;
+        }
+        int maxSubTreePath = 0;
+        for(Node node: root.children){
+            maxSubTreePath = Math.max(maxSubTreePath, maxDepth(node));
+        }
+        return maxSubTreePath+1;
+    }
+    
+    /**
      * https://leetcode.com/problems/n-ary-tree-postorder-traversal
      * 
      * Given an n-ary tree, return the postorder traversal of its nodes' values.

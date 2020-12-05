@@ -1,5 +1,7 @@
 package datastructures.lists;
 
+import java.util.*;
+
 public class LinkedList {
     ListNode head;
 
@@ -234,5 +236,161 @@ public class LinkedList {
             prevlocalhead.next = curr;
         }
         return head;
+    }
+
+    /**
+     * Given a singly linked list, group all odd nodes together followed by the even nodes. Please note here we are talking about the node number and not the value in the nodes.
+
+        You should try to do it in place. The program should run in O(1) space complexity and O(nodes) time complexity.
+
+        Example 1:
+
+        Input: 1->2->3->4->5->NULL
+        Output: 1->3->5->2->4->NULL
+        Example 2:
+
+        Input: 2->1->3->5->6->4->7->NULL
+        Output: 2->3->6->7->1->5->4->NULL
+        Note:
+
+        The relative order inside both the even and odd groups should remain as it was in the input.
+        The first node is considered odd, the second node even and so on
+     * @param head
+     * @return
+     */
+    public ListNode oddEvenList(ListNode head) {
+        ListNode oddListPointer = head, end = head;
+        while(end != null && end.next != null){
+            end = end.next;
+        }
+        // move in pairs
+        ListNode evenListPointer = end;
+        ListNode evenListHead = null;
+        while(oddListPointer != null && oddListPointer != end && oddListPointer != evenListHead){
+            ListNode evenNode = oddListPointer.next;
+            if(evenNode.next != null){
+                oddListPointer.next = evenNode.next;
+                System.out.println(evenListPointer.key);
+                evenListPointer.next = evenNode;
+                if(evenListHead == null){
+                    evenListHead = evenNode;
+                }
+                evenNode.next = null;   
+            }
+            
+            // set for next round
+            oddListPointer = oddListPointer.next;
+            evenListPointer = evenNode;
+        }
+        return head;
+    }
+
+    // https://leetcode.com/problems/palindrome-linked-list/
+    public boolean isPalindrome(ListNode head) {
+        int numNodes = 0;
+        ListNode curr = head;
+        while(curr != null){
+            curr = curr.next;
+            numNodes+=1;
+        }
+        Stack<Integer> stack = new Stack<>();
+        curr = head;
+        int i = 1;
+        while(i <= Math.floor(numNodes/2)){
+            stack.push(curr.key);
+            curr = curr.next;
+            i+=1;
+        }
+        // System.out.println(numNodes + "," + stack.size());
+        if(numNodes % 2 != 0){
+            curr = curr.next; // skip middle node
+            i+=1;
+        }
+        while(i <= numNodes && stack.peek() == curr.key){
+            curr = curr.next;
+            stack.pop();
+            i+= 1;
+        }
+        return stack.empty();
+    }
+
+    // https://leetcode.com/problems/merge-two-sorted-lists/
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode head = null, prev =null, curr1 = l1, curr2 = l2;
+        while(curr1 != null && curr2 != null){
+            if(curr1.key <= curr2.key){
+                if(head == null){
+                    head = curr1;
+                    prev = curr1;
+                } else{
+                    prev.next = curr1;
+                    prev = curr1;
+                }
+                curr1 = curr1.next;
+            } else{
+                if(head == null){
+                    head = curr2;
+                    prev = curr2;
+                } else{
+                    prev.next = curr2;
+                    prev = curr2;
+                }
+                curr2 = curr2.next;
+            }
+        }
+        if(curr1 != null){
+            if(prev != null){ // not merged yet
+                prev.next = curr1;   
+            } else{
+                head = curr1;
+            }
+        }
+        if(curr2 != null){
+            if(prev != null){
+                prev.next = curr2;   
+            } else{
+                head = curr2;
+            }
+        }
+        return head;
+    }
+
+    // https://leetcode.com/problems/linked-list-cycle/
+    public boolean hasCycle(ListNode head) {
+        ListNode slow = head, fast = head;
+        boolean cycleCheckDone = false;
+        while(slow != null && fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            cycleCheckDone = true; // to make sure the pointers moved atleast once as they are both initialized to head
+            if(slow == fast){
+                break;
+            }
+        }
+        return cycleCheckDone && slow == fast;
+    }
+
+    // https://leetcode.com/problems/linked-list-cycle-ii/
+    public ListNode detectCycle(ListNode head){
+        ListNode slow = head, fast = head;
+        boolean cycleCheckDone = false;
+        while(slow != null && fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            cycleCheckDone = true; // to make sure the pointers moved atleast once as they are both initialized to head
+            if(slow == fast){
+                break;
+            }
+        }
+        if(!cycleCheckDone || slow != fast){ // no cycle found
+            return null; // no start of the loop
+        }
+        // post process, set slow=head and move both slow, fast one at a time, they meet at start node
+        slow = head;
+        while(slow != fast){
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
     }
 }

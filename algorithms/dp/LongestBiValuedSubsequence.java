@@ -6,6 +6,8 @@ public class LongestBiValuedSubsequence {
      * [1,2,3,2] ==> 3 as (2,3,2) is slice with max length containing 2 values
      * [0,5,4,4,5,12] ==> 4 as (5,4,4,5) is slice with max length containing 2 values
      * [4,4,4,7,7,6] ==> 5
+     * 
+     * subarray(continuous) and not subsequence
      * @param A
      * @return
      */

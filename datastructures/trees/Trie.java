@@ -62,6 +62,19 @@ class TrieDT {
         return curr != null && curr.isEndOfWord;
     }
 
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    public boolean startsWith(String prefix) {
+        TrieNode curr = root;
+        for(int level=0;level<prefix.length();level++){
+            int index = prefix.charAt(level) - 'a';
+            if(curr.children[index] == null) {
+                return false;
+            }
+            curr = curr.children[index];
+        }
+        return curr != null;
+    }
+
     /**
      * Ex words in dict: ["bad"],["dad"],["mad"],["pad"],["bad"]
      * Search words: [".ad"],["b.."],["..."],["m..ui"]
