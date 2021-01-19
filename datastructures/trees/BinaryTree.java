@@ -134,6 +134,57 @@ public class BinaryTree {
         }
     }
 
+    // https://leetcode.com/problems/smallest-subtree-with-all-the-deepest-nodes/
+    class Context{
+        int maxDepth;
+        TreeNode subtreeRoot;
+        Context(){
+            maxDepth =0;
+            subtreeRoot = null;
+        }
+    }
+    int leafDepth(TreeNode root, int level, Context context){
+        if(root == null){
+            return -1;
+        }
+        if(root.left == null && root.right == null){
+            if(level >= context.maxDepth){
+                context.maxDepth = level;
+                context.subtreeRoot = root; //  node is its own LCA
+            }
+            return level;
+        }
+        int leftLeafDepth = leafDepth(root.left, level+1, context);
+        int rightLeafDepth = leafDepth(root.right, level+1, context);
+        // this check succeeds only at a higher up LCA (not leaf nodes)
+        if(leftLeafDepth == rightLeafDepth && rightLeafDepth == context.maxDepth){
+            context.subtreeRoot = root;
+        } // don't update if it is not a candidate LCA
+        return Math.max(leftLeafDepth, rightLeafDepth);
+    }
+    /**
+     * Given the root of a binary tree, the depth of each node is the shortest distance to the root.
+
+        Return the smallest subtree such that it contains all the deepest nodes in the original tree.
+
+        A node is called the deepest if it has the largest depth possible among any node in the entire tree.
+
+        The subtree of a node is tree consisting of that node, plus the set of all descendants of that node.
+
+        Note: This question is the same as 1123: https://leetcode.com/problems/lowest-common-ancestor-of-deepest-leaves/
+
+        Idea:
+        Same as LCA of given two nodes. But we need to know the depths of leaf nodes on left and right subtree.
+        leaves with max depth are themselves LCA. At non-leaf nodes, whose left leaf and right leaf depth match
+        the current max Depth are also candidate LCAs.
+     * @param root
+     * @return
+     */
+    public TreeNode subtreeWithAllDeepest(TreeNode root) {
+        Context context = new Context();
+        leafDepth(root, 0, context);
+        return context.subtreeRoot;
+    }
 
     /**
      * https://leetcode.com/problems/binary-tree-level-order-traversal-ii/
@@ -632,6 +683,92 @@ The flattened tree should look like:
     }
     public TreeNode buildTree(int[] preorder, int[] inorder) {
         return buildTreeUtil(preorder, inorder, 0, inorder.length-1);
+    }
+
+    // https://leetcode.com/problems/longest-zigzag-path-in-a-binary-tree/
+    int longestPathLen = 0;
+    void dfs(TreeNode root, Boolean fromLeft, int pathLength){
+        if(root == null){
+            return;
+        }
+        if(pathLength > longestPathLen){
+            longestPathLen = pathLength;
+        }
+        if(fromLeft == null) { // initial
+            dfs(root.left, false, 1);
+            dfs(root.right, true, 1);
+        } else if(fromLeft){ // from left, go left extend path
+            dfs(root.left, false, pathLength+1);
+            dfs(root.right, true, 1); // reset path on right
+        } else { // from right, go right and extend path
+            dfs(root.left, false, 1);
+            dfs(root.right, true, pathLength+1);
+        }
+    }
+    /**
+     * Given a binary tree root, a ZigZag path for a binary tree is defined as follow:
+
+        Choose any node in the binary tree and a direction (right or left).
+        If the current direction is right then move to the right child of the current node otherwise move to the left child.
+        Change the direction from right to left or right to left.
+        Repeat the second and third step until you can't move in the tree.
+        Zigzag length is defined as the number of nodes visited - 1. (A single node has a length of 0).
+
+        Return the longest ZigZag path contained in that tree.
+    
+     * @param root
+     * @return
+     */
+    public int longestZigZag(TreeNode root) {
+        dfs(root, null, 0);
+        return longestPathLen;
+    }
+
+    // https://leetcode.com/problems/pseudo-palindromic-paths-in-a-binary-tree/
+    int numPaths;
+    boolean canRearrangeAsPalindromeSequence(Map<Integer, Integer> occurences){
+        // all even counts or one odd count
+        boolean oddCountPresent = false;
+        for(int key: occurences.keySet()){
+            int count = occurences.get(key);
+            if(count % 2 != 0){
+                if(oddCountPresent){
+                    return false;
+                } else {
+                    oddCountPresent = true;
+                }
+            }
+        }
+        return true;
+    }
+    void preOrder(TreeNode root, Map<Integer, Integer> occurences){
+        if(root == null){
+            return;
+        }
+        occurences.put(root.val, occurences.getOrDefault(root.val, 0)+1);
+        if(root.left == null && root.right == null){
+            if(canRearrangeAsPalindromeSequence(occurences)){
+                numPaths+=1;
+            }
+        }
+        preOrder(root.left, occurences);
+        preOrder(root.right, occurences);
+        // backtracking
+        occurences.put(root.val, occurences.getOrDefault(root.val, 0)-1);
+    }
+    /**
+     * Given a binary tree where node values are digits from 1 to 9. A path in the binary tree
+     * is said to be pseudo-palindromic if at least one permutation of the node values in the path is a palindrome.
+
+        Return the number of pseudo-palindromic paths going from the root node to leaf nodes.
+
+     * @param root
+     * @return
+     */
+    public int pseudoPalindromicPaths (TreeNode root) {
+        Map<Integer, Integer> occurences = new HashMap<>();
+        preOrder(root, occurences);
+        return numPaths;
     }
     public static void main(String args[]) {
         BinaryTree tree = new BinaryTree();

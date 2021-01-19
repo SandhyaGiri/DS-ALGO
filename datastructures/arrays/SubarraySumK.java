@@ -102,7 +102,8 @@ public class SubarraySumK {
     /**
      * https://leetcode.com/problems/minimum-size-subarray-sum/
      * 
-     * Given an array of n positive integers and a positive integer s, find the minimal length of a contiguous subarray of which the sum ≥ s. If there isn't one, return 0 instead.
+     * Given an array of n positive integers and a positive integer s, find the minimal length of a contiguous subarray of which the sum ≥ s.
+     * If there isn't one, return 0 instead.
 
         Example: 
 
@@ -145,5 +146,62 @@ public class SubarraySumK {
             sumOccurences.put(sum[i], i);
         }
         return subArrayMinSize == Integer.MAX_VALUE ? 0 : subArrayMinSize;
+    }
+
+    // https://leetcode.com/problems/subarray-product-less-than-k/
+    /**
+     * Your are given an array of positive integers nums.
+
+    Count and print the number of (contiguous) subarrays where the product of all the elements in the subarray is less than k.
+
+    Example 1:
+    Input: nums = [10, 5, 2, 6], k = 100
+    Output: 8
+    Explanation: The 8 subarrays that have product less than 100 are: [10], [5], [2], [6], [10, 5], [5, 2], [2, 6], [5, 2, 6].
+    Note that [10, 5, 2] is not included as the product of 100 is not strictly less than k.
+    Note:
+
+    0 < nums.length <= 50000.
+    0 < nums[i] < 1000.
+    0 <= k < 10^6.
+
+    Idea: Because log(prod x_i) = sum (log x_i), we can reduce the problem to subarray sums instead of subarray products.
+    The motivation for this is that the product of some arbitrary subarray may be way too large (potentially 1000^50000),
+    and also dealing with sums gives us some more familiarity as it becomes similar to other problems we may have solved before.
+
+    Since sum array is already sorted, we can binary search for sum[i] + log(k) in the right subarray and find the insertPos=j.
+    Now all indices i+1 ..j can be a subarray starting at i which have overall sum (sum[j]-sum[i] < log(k)) smaller than our target.
+    
+     * @param nums
+     * @param k
+     * @return
+     */
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        int n = nums.length;
+        if(n > 0){
+            // take log and convert to subarray sum problem
+            double[] sum = new double[n+1]; // one more element, first ele is 0
+            for(int i=0;i<n;i++){
+                sum[i+1] = sum[i] + Math.log(nums[i]);
+            }
+            double logk = Math.log(k);
+            int numSubarrays =0;
+            for(int i=0;i<=n;i++){
+                // bsearch on i+1..n, for sum[i] + log(k), as we need sum[j] -sum[i] <= log(k)
+                int l=i+1, r=n;
+                while(l<=r){
+                    int mid = l+(r-l)/2;
+                    if(sum[mid] < sum[i] + logk){
+                        l = mid+1; // go right
+                    } else {
+                        r = mid-1; // go left (including mid, as it is equal to our target)
+                    }
+                }
+                // l is the insertpos, all elements within i..l are valid
+                numSubarrays += l - i -1;
+            }
+            return numSubarrays;
+        }
+        return 0;
     }
 }

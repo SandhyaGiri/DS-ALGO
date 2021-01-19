@@ -35,7 +35,7 @@ public class LRUCache {
         } else {
             if(currSize == capacity){
                 // must evict
-                int keyToBeEvicted = recentKeyQueue.pollFirst();
+                int keyToBeEvicted = recentKeyQueue.pollFirst(); // already removes the least recently used from the queue.
                 kvMap.remove(keyToBeEvicted);
                 kvMap.put(key, value);
                 recentKeyQueue.addLast(key);

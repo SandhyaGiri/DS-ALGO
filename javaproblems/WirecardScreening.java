@@ -18,12 +18,18 @@ public class WirecardScreening {
         
         Optional<Integer> sum = aggregateStream(numbers, num -> num%2 != 0, (x,y) -> x+y);
         
+        Consumer<Integer> consumer = (x) ->  System.out.println(x);
+        Consumer<Number> numConsumer = (x) -> System.out.println("Number: " + x.intValue());
+        consumer = consumer.andThen(numConsumer);
+
         numbers = Stream.of(new Integer[]{1,3,5,7,9});
+        numbers = numbers.peek(consumer);
         Optional<Integer> prod = aggregateStream(numbers, num -> num%2 != 0, (x,y) -> x*y);
         
         System.out.println("Sum of odd numbers: " + (sum.isPresent() ? sum.get() : null));
         System.out.println("Product of odd numbers: " + (prod.isPresent() ? prod.get() : null));
 
+        
         // same as
         // Stream.generate(() => {return "abc";}).limit(5);
         Stream<String> stream2 = Stream.iterate("abc", (i) -> i).limit(5);

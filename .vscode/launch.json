@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - ArrayAdditional",
+            "request": "launch",
+            "mainClass": "datastructures.arrays.ArrayAdditional",
+            "projectName": "Programs_40743c2e"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - GroupAnagrams",
             "request": "launch",
             "mainClass": "datastructures.strings.GroupAnagrams",

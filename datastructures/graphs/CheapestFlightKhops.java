@@ -112,6 +112,9 @@ public class CheapestFlightKhops {
             queue.add(new DestNode(src, 0, 0));
             int minCost = Integer.MAX_VALUE;
             while(!queue.isEmpty()) {
+                // since we have PQ we cannot do level based traversing to keep track of k hops (k levels)
+                // as adding new nodes will affect the top node which will be polled next.
+                // THAT IS WHY we maintain "hops" inside the nodes in the PQ.
                 DestNode node = queue.poll();
                 if(node.v == dst) {
                     // System.out.println(node.v + " " + node.cost + " "+ node.hops);

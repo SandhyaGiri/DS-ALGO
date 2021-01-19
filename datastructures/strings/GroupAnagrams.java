@@ -54,7 +54,7 @@ public class GroupAnagrams {
         int[] chars = new int[26]; // if given strings contain only lowercase letters
         for(int i=0;i<s1.length();i++){
             chars[s1.charAt(i) -'a'] += 1;
-            chars[s1.charAt(i) -'a'] -= 1;
+            chars[s2.charAt(i) -'a'] -= 1;
         }
         boolean match = true;
         for(int i=0;i<26;i++){

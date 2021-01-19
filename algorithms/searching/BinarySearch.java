@@ -289,6 +289,73 @@ public class BinarySearch {
         }
         return hIndex;
     }
+
+    // https://leetcode.com/problems/find-k-closest-elements/
+    int bsearchIndex(int target, int[] arr){
+        int l=0,r=arr.length-1;
+        while(l<=r){
+            int mid=l+(r-l)/2;
+            if(arr[mid] == target){
+                return mid;
+            } else if(target > arr[mid]){
+                l = mid+1;
+            } else{
+                r=mid-1;
+            }
+        }
+        return l;
+    }
+    /**
+     * Given a sorted integer array arr, two integers k and x, return the k closest integers to x in the array. The result should also be sorted in ascending order.
+
+        An integer a is closer to x than an integer b if:
+
+        |a - x| < |b - x|, or
+        |a - x| == |b - x| and a < b
+        
+
+        Example 1:
+
+        Input: arr = [1,2,3,4,5], k = 4, x = 3
+        Output: [1,2,3,4]
+        Example 2:
+
+        Input: arr = [1,2,3,4,5], k = 4, x = -1
+        Output: [1,2,3,4]
+
+        Idea: locate the target x in the array or its insertpos using bsearch. Then we need to find k elements either on left or right side
+        of this insert pos. keep expanding left (and add those elements to result) as long as their abs diff to target is <= right pointer.
+        Otheriwse take the right element and increment its pointer. 
+
+        Two pointer solution expanding from target's insertPos until k elements are used.
+        Time: O(log n + k + klogk) // last part for sorting resulting k elements.
+     * @param arr
+     * @param k
+     * @param x
+     * @return
+     */
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        int index = bsearchIndex(x, arr);
+        int leftIndex = Math.max(0, index-1);
+        if(leftIndex == index){
+            index +=1;
+        }
+        System.out.println(index + "-" + leftIndex);
+        List<Integer> result = new ArrayList<>();
+        while(k>0){
+            // prefer left element even if abs diff is same as that of right ele
+            if(leftIndex>=0 && (index >= arr.length || x - arr[leftIndex] <= arr[index] - x)){
+                result.add(arr[leftIndex]);
+                leftIndex-=1;
+            } else if(index < arr.length){
+                result.add(arr[index]);
+                index+=1;
+            }
+            k-=1;
+        }
+        Collections.sort(result);
+        return result;
+    }
 }
 
 class MountainPeaks {
@@ -436,7 +503,7 @@ class FindRightIntervals{
         interval, so we store the starting point-index in a treeMap and use its ceilingEntry method
         to get both starting point and the index.
 
-        ceilingEntry basically does bsearch inside, as entries are stored in a binary search tree.
+        ceilingEntry basically does bsearch inside, as entries are stored in a balanced binary search tree.
      * @param intervals
      * @return
      */

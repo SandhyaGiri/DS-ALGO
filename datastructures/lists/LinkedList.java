@@ -393,4 +393,74 @@ public class LinkedList {
         }
         return slow;
     }
+
+    //https://leetcode.com/problems/remove-duplicates-from-sorted-list
+    /**
+     * Given a sorted linked list, delete all duplicates such that each element appear only once.
+
+        Example 1:
+
+        Input: 1->1->2
+        Output: 1->2
+        Example 2:
+
+        Input: 1->1->2->3->3
+        Output: 1->2->3
+     * @param head
+     * @return
+     */
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode prev = null;
+        ListNode curr=head;
+        while(curr != null){
+            if(prev != null && curr.key == prev.key){
+                curr = curr.next;
+                prev.next = null; // will be reattached when a new node is found
+            } else if(prev == null){
+                prev = curr;
+            } else if(curr.key != prev.key){
+                prev.next = curr;
+                prev = curr;
+                curr = curr.next;
+            }
+        }
+        return head;
+    }
+
+    // https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii
+    /**
+     * Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.
+
+        Return the linked list sorted as well.
+
+        Example 1:
+
+        Input: 1->2->3->3->4->4->5
+        Output: 1->2->5
+        Example 2:
+
+        Input: 1->1->1->2->3
+        Output: 2->3
+     * @param head
+     * @return
+     */
+    public ListNode deleteDuplicates2(ListNode head) {
+        ListNode prevNew = null, prevOld = null; // newly created and old lists
+        ListNode newHead = null, curr=head;
+        while(curr != null){
+            if((curr.next == null || curr.next.key != curr.key) && (prevOld == null || prevOld.key != curr.key)){ // distinct node
+                ListNode newNode = new ListNode(curr.key);
+                if(prevNew == null){
+                    prevNew = newNode;
+                    newHead = newNode;
+                } else{
+                    prevNew.next = newNode;
+                    prevNew = newNode;
+                }
+            }
+            prevOld = curr;
+            curr = curr.next;
+        }
+        return newHead;
+    }
 }
