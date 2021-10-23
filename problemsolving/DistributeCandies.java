@@ -1,8 +1,12 @@
 package problemsolving;
 
-// https://leetcode.com/problems/distribute-candies-to-people
+import java.util.*;
+
 public class DistributeCandies {
     /**
+     * 
+     * // https://leetcode.com/problems/distribute-candies-to-people
+     * 
      * We distribute some number of candies, to a row of n = num_people people in the following way:
 
         We then give 1 candy to the first person, 2 candies to the second person, and so on until we give n candies to the last person.
@@ -86,5 +90,46 @@ public class DistributeCandies {
             index++;
         }
         return result;
+    }
+
+    /**
+     * https://leetcode.com/problems/distribute-candies/
+     * 
+     * Alice has n candies, where the ith candy is of type candyType[i]. Alice noticed that she started to gain weight, so she visited a doctor.
+
+        The doctor advised Alice to only eat n / 2 of the candies she has (n is always even). Alice likes her candies very much, and she wants to eat the maximum number of different types of candies while still following the doctor's advice.
+
+        Given the integer array candyType of length n, return the maximum number of different types of candies she can eat if she only eats n / 2 of them.
+
+        Example 1:
+
+        Input: candyType = [1,1,2,2,3,3]
+        Output: 3
+        Explanation: Alice can only eat 6 / 2 = 3 candies. Since there are only 3 types, she can eat one of each type.
+        Example 2:
+
+        Input: candyType = [1,1,2,3]
+        Output: 2
+        Explanation: Alice can only eat 4 / 2 = 2 candies. Whether she eats types [1,2], [1,3], or [2,3], she still can only eat 2 different types.
+        Example 3:
+
+        Input: candyType = [6,6,6,6]
+        Output: 1
+        Explanation: Alice can only eat 4 / 2 = 2 candies. Even though she can eat 2 candies, she only has 1 type.
+
+        Idea: count the distinct candy types, the answer is min of distinct types or n/2.
+
+     * @param candyType
+     * @return
+     */
+    public int distributeCandies(int[] candyType) {
+        Set<Integer> candyTypes = new HashSet<>();
+        int numCandies = candyType.length;
+        for(int i=0;i<numCandies;i++){
+            if(!candyTypes.contains(candyType[i])){
+                candyTypes.add(candyType[i]);
+            }
+        }
+        return Math.min(candyTypes.size(), numCandies/2);
     }
 }
